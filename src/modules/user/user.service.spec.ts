@@ -63,10 +63,16 @@ describe('UserService', () => {
       mockPrismaService.user.findUnique
         .mockResolvedValueOnce(null)
         .mockResolvedValueOnce(mockUser);
-      mockPrismaService.user.create.mockResolvedValue({
-        ...mockUser,
-        password: undefined,
-      });
+      
+      const userWithoutPassword = {
+        id: mockUser.id,
+        email: mockUser.email,
+        name: mockUser.name,
+        createdAt: mockUser.createdAt,
+        updatedAt: mockUser.updatedAt,
+      };
+      
+      mockPrismaService.user.create.mockResolvedValue(userWithoutPassword);
 
       const result = await service.create(createUserDto);
 
@@ -166,15 +172,11 @@ describe('UserService', () => {
         id: userId,
         email: 'find@example.com',
         name: 'Find User',
-        password: 'hashed-password',
         createdAt: new Date(),
         updatedAt: new Date(),
       };
 
-      mockPrismaService.user.findUnique.mockResolvedValue({
-        ...mockUser,
-        password: undefined,
-      });
+      mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
 
       const result = await service.findOne(userId);
 
